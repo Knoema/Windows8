@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel.Search;
 
 // The Grouped Items Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234231
 
@@ -26,6 +27,9 @@ namespace Knoema.Windows8
         public HomePage()
         {
             this.InitializeComponent();
+
+			SearchPane.GetForCurrentView().SuggestionsRequested += SearchPage_SuggestionsRequested;
+			SearchPane.GetForCurrentView().QuerySubmitted += SearchPage_QuerySubmitted;
         }
 
         /// <summary>
@@ -72,5 +76,44 @@ namespace Knoema.Windows8
             var itemId = ((ResourceItem)e.ClickedItem).UniqueId;
             this.Frame.Navigate(typeof(ItemDetailPage), itemId);
         }
+
+		async void SearchPage_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
+		{
+			var homeTags = await AppModel.GetHomeTags("AllGroups");
+
+			var suggestedItems = new List<string>();
+			suggestedItems.AddRange(homeTags.Select(x => x.Title));
+
+			foreach (var tag in homeTags)
+				suggestedItems.AddRange(tag.Items.Select(x => x.Title));
+
+			suggestedItems = suggestedItems.Where(x => x.ToLower().Contains(args.QueryText.ToLower())).Distinct().ToList();
+			args.Request.SearchSuggestionCollection.AppendQuerySuggestions(suggestedItems);
+		}
+
+		async void SearchPage_QuerySubmitted(SearchPane sender, SearchPaneQuerySubmittedEventArgs args)
+		{
+			var homeTags = await AppModel.GetHomeTags("AllGroups");
+
+			TagItem tag = null;
+			ResourceItem res = null;
+
+			tag = homeTags.FirstOrDefault(x => x.Title == args.QueryText);
+			if (tag == null)
+			{
+				foreach (var item in homeTags)
+				{
+					res = item.Items.FirstOrDefault(x => x.Title == args.QueryText);
+					if (res != null)
+						break;
+				}
+			}
+
+			if (tag != null)			
+				this.Frame.Navigate(typeof(TagPage), tag.UniqueId);			
+
+			else if (res != null)
+				this.Frame.Navigate(typeof(ItemDetailPage), res.UniqueId);			
+		}
     }
 }
