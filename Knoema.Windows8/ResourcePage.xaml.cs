@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel.DataTransfer;
 
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
 
@@ -26,6 +27,8 @@ namespace Knoema.Windows8
     {
         public ItemDetailPage()
         {
+			RegisterForShare();
+
             this.InitializeComponent();
         }
 
@@ -96,6 +99,22 @@ namespace Knoema.Windows8
 			var container = flipView.ItemContainerGenerator.ContainerFromItem(flipView.SelectedIndex);
 			if (container != null)
 				FindFirstElementInVisualTree<WebView>(container).Navigate(new Uri((flipView.SelectedItem as ResourceItem).Content));
+		}
+
+		private void RegisterForShare()
+		{
+			DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+			dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareLinkHandler);
+		}
+
+		private void ShareLinkHandler(DataTransferManager sender, DataRequestedEventArgs e)
+		{
+			var selectedItem = (ResourceItem)this.flipView.SelectedItem;
+
+			DataRequest request = e.Request;
+			request.Data.Properties.Title = selectedItem.Title;
+			request.Data.Properties.Description = selectedItem.Description;
+			request.Data.SetUri(new Uri("http://knoema.com/" + selectedItem.UniqueId));
 		}
     }
 }
