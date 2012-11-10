@@ -23,13 +23,14 @@ namespace Knoema.Windows8.Data
 			public string Type { get; set; }
 		}
 		
-		public ResourceItem(String uniqueId, String title, String subtitle, String imagePath, String description, TagItem group)
-			: base(uniqueId, title, subtitle, imagePath, description)
+		public ResourceItem(String uniqueId, String title, String subtitle, String imagePath, String description, TagItem group, String color)
+			: base(uniqueId, title, subtitle, imagePath, description, color)
 		{
 			this._group = group;
 		}
 
-		public ResourceItem(Serial item, TagItem group) : base (item.Id, item.Title, string.Empty, item.ThumbnailUrl.Replace(".png", "-x2.png"), item.Description)
+		public ResourceItem(Serial item, TagItem group, String color)
+			: base(item.Id, item.Title, string.Empty, item.ThumbnailUrl.Replace(".png", "-x2.png"), item.Description, color)
 		{
 			this._content = item.EmbedUrl + "?noheader=1";
 			this._group = group;

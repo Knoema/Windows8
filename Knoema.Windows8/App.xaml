@@ -19,16 +19,15 @@
 
             <!-- Application-specific resources -->
 
-            <x:String x:Key="AppName">Knoema.Windows8</x:String>
+            <x:String x:Key="AppName">Knoema</x:String>
             <DataTemplate x:Key="ItemTemplate">
                 <Grid HorizontalAlignment="Left" Width="362" Height="222">
                     <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" BorderBrush="{StaticResource ListBoxItemPointerOverBackgroundThemeBrush}" BorderThickness="1">
                         <Image Source="{Binding Image}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
                     </Border>
-                    <StackPanel VerticalAlignment="Bottom" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}">
-                        <TextBlock Text="{Binding Title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextStyle}" Height="40" Padding="15,0,15,0"/>
-                        <!--<TextBlock Text="{Binding Subtitle}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>-->
-                    </StackPanel>
+                    <StackPanel VerticalAlignment="Bottom" Background="{Binding Color}">
+                        <TextBlock Text="{Binding Title}" Foreground="White" Style="{StaticResource TitleTextStyle}" Height="40" Padding="15,0,15,0"/>
+                     </StackPanel>
                 </Grid>
             </DataTemplate>
         </ResourceDictionary>

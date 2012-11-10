@@ -44,6 +44,7 @@ namespace Knoema.Windows8
             var group = await AppModel.GetTag((String)navigationParameter);
             this.DefaultViewModel["Group"] = group;
             this.DefaultViewModel["Items"] = group.Items;
+			this.DefaultViewModel["Color"] = group.Color;
         }
 
         /// <summary>

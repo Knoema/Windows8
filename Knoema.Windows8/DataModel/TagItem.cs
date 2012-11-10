@@ -13,8 +13,8 @@ namespace Knoema.Windows8.Data
 	/// </summary>
 	public class TagItem : ItemBase
 	{
-		public TagItem(String uniqueId, String title, String subtitle, String imagePath, String description)
-			: base(uniqueId, title, subtitle, imagePath, description)
+		public TagItem(String uniqueId, String title, String subtitle, String imagePath, String description, String color)
+			: base(uniqueId, title, subtitle, imagePath, description, color)
 		{
 			Items.CollectionChanged += ItemsCollectionChanged;
 		}

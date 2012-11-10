@@ -106,23 +106,32 @@ namespace Knoema.Windows8.Data
 		private async Task LoadTopics()
 		{
 			var client = new System.Net.Http.HttpClient();
+			var tags = new string[]{
+									"Demographics",
+									"Energy",
+									"Economics",
+									"Commodities",
+									"Africa",
+									"Agriculture",
+									"Commodity Passport",
+									"World Data Maps"};
 
-			var topicResp = await client.GetAsync("http://knoema.com/api/1.0/frontend/tags/?client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif");
-			var topics = JsonConvert.DeserializeObject<IEnumerable<string>>(await topicResp.Content.ReadAsStringAsync());
-
-			await Task.WhenAll(topics.Select(async topic =>
+			var colors = new string[] { "#146714", "#671414", "#674b14", "#14674b", "#144b67", "#141467", "#4b1467", "#66144b" };
+		
+			foreach (var topic in tags)
 			{
-				var group = new TagItem(topic, topic, string.Empty, "Assets/DarkGray.png", string.Empty);
+				var color = colors[tags.ToList().IndexOf(topic)];
 
-				var tagResp = await client.GetAsync(string.Format("http://knoema.com/api/1.0/frontend/tags?tag={0}&client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", topic));
+				var group = new TagItem(topic, topic, string.Empty, "Assets/DarkGray.png", string.Empty, color);
+
+				var tagResp = await client.GetAsync(string.Format("http://dev.knoema.org/api/1.0/frontend/tags?tag={0}&client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", topic));
+
 				var resources = JsonConvert.DeserializeObject<IEnumerable<ResourceItem.Serial>>(await tagResp.Content.ReadAsStringAsync());
-
 				foreach (var resource in resources.Where(res => res.Type != "Dataset"))
-					group.Items.Add(new ResourceItem(resource, group));
+					group.Items.Add(new ResourceItem(resource, group, color));
 
 				this.HomeTags.Add(group);
-			}));
+			}
 		}
-
     }
 }

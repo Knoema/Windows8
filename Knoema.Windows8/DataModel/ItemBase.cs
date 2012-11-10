@@ -17,13 +17,14 @@ namespace Knoema.Windows8.Data
 	{
 		private static Uri _baseUri = new Uri("ms-appx:///");
 
-		public ItemBase(String uniqueId, String title, String subtitle, String imagePath, String description)
+		public ItemBase(String uniqueId, String title, String subtitle, String imagePath, String description, String color)
 		{
 			this._uniqueId = uniqueId;
 			this._title = title;
 			this._subtitle = subtitle;
 			this._description = description;
 			this._imagePath = imagePath;
+			this._color = color;
 		}
 
 		private string _uniqueId = string.Empty;
@@ -52,6 +53,13 @@ namespace Knoema.Windows8.Data
 		{
 			get { return this._description; }
 			set { this.SetProperty(ref this._description, value); }
+		}
+
+		private string _color = string.Empty;
+		public string Color
+		{
+			get { return this._color; }
+			set { this.SetProperty(ref this._color, value); }
 		}
 
 		private ImageSource _image = null;

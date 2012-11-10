@@ -61,13 +61,13 @@
 
             <FlipView.ItemContainerStyle>
                 <Style TargetType="FlipViewItem">
-                    <Setter Property="Margin" Value="0,17,0,0"/>
+                    <Setter Property="Margin" Value="20"/>
                 </Style>
             </FlipView.ItemContainerStyle>
 
             <FlipView.ItemTemplate>
                 <DataTemplate>
-                    <Grid x:Name="itemGrid" Margin="117,0,117,0">
+                    <Grid x:Name="itemGrid" Margin="120,0,120,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
@@ -76,17 +76,19 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <RichTextBlock Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False" Grid.Row="0" Margin="0,0,0,20">
+                        <RichTextBlock Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False" Grid.Row="0">
                             <Paragraph>
-                                <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>
+                                <Run FontSize="30" Text="{Binding Title}"/>
                             </Paragraph>
                         </RichTextBlock>
-                        <RichTextBlock Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False" Grid.Row="1" Margin="0,7">
+                        <RichTextBlock Margin="0, 10, 40, 0" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False" Grid.Row="1">
                             <Paragraph>
                                 <Run FontWeight="Normal" Text="{Binding RawDescription}" FontFamily="Global User Interface"/>
                             </Paragraph>
                         </RichTextBlock>
-                        <WebView x:Name="webView" AutomationProperties.Name="{Binding Title}" Grid.Row="2" Margin="0,0,0,20" Width="980" HorizontalAlignment="Left"/>
+                        
+                        <WebView x:Name="webView" Margin="0, 20, 0, 0" AutomationProperties.Name="{Binding Title}" Source="{Binding Content}" Grid.Row="2" Width="980"  HorizontalAlignment="Left"/>
+                    
                     </Grid>
                 </DataTemplate>
             </FlipView.ItemTemplate>
