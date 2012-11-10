@@ -16,7 +16,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Knoema.Windows8.App">
       <VisualElements DisplayName="Knoema" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Knoema.Windows8" ForegroundText="light" BackgroundColor="#0A1428">
-        <DefaultTile ShowName="noLogos" />
+        <DefaultTile ShowName="wideLogoOnly" WideLogo="Assets\WideLogo.png" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>
       <Extensions>

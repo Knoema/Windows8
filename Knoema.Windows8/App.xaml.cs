@@ -15,6 +15,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel.Background;
+using Windows.UI.Notifications;
+using Windows.Data.Xml.Dom;
 
 // The Grid App template is documented at http://go.microsoft.com/fwlink/?LinkId=234226
 
@@ -33,6 +36,8 @@ namespace Knoema.Windows8
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+			StartPeriodicUpdate();
         }
 
         /// <summary>
@@ -99,5 +104,19 @@ namespace Knoema.Windows8
             await SuspensionManager.SaveAsync();
             deferral.Complete();
         }
+
+		private void StartPeriodicUpdate()
+		{
+			/*
+			XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileWideImageAndText01);
+			XmlNodeList tileTextAttributes = tileXml.GetElementsByTagName("text");
+			tileTextAttributes[0].InnerText = "Hello World! My very own tile notification";
+			 */
+
+			// update the tile poll URI
+			Uri polledUri = new Uri("http://test.knoema.org/");
+			PeriodicUpdateRecurrence recurrence = PeriodicUpdateRecurrence.Hour;
+			TileUpdateManager.CreateTileUpdaterForApplication().StartPeriodicUpdate(polledUri, recurrence);
+		}
     }
 }
