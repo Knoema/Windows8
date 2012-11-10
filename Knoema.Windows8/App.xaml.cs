@@ -114,7 +114,7 @@ namespace Knoema.Windows8
 			 */
 
 			// update the tile poll URI
-			Uri polledUri = new Uri("http://test.knoema.org/");
+			Uri polledUri = new Uri("http://tile.knoema.org/");
 			PeriodicUpdateRecurrence recurrence = PeriodicUpdateRecurrence.Hour;
 			TileUpdateManager.CreateTileUpdaterForApplication().StartPeriodicUpdate(polledUri, recurrence);
 		}

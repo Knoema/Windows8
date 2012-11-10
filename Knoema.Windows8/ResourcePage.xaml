@@ -9,8 +9,8 @@
     xmlns:common="using:Knoema.Windows8.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
+    mc:Ignorable="d">    
+    
     <Page.Resources>
 
         <!-- Collection of items displayed by this page -->
@@ -27,7 +27,7 @@
     -->
     <Grid
         Style="{StaticResource LayoutRootStyle}"
-        DataContext="{Binding Group}"
+        DataContext="{Binding Item}"
         d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:AppModel, IsDesignTimeCreatable=True}}">
 
         <Grid.RowDefinitions>
@@ -50,50 +50,30 @@
             one item at a time, allowing the user to flip through all items in the chosen
             group
         -->
-        
-        <FlipView
-            x:Name="flipView"
-            AutomationProperties.AutomationId="ItemsFlipView"
-            AutomationProperties.Name="Item Details"
-            TabIndex="1"
-            Grid.Row="1"
-            ItemsSource="{Binding Source={StaticResource itemsViewSource}}" SelectionChanged="flipView_SelectionChanged">
 
-            <FlipView.ItemContainerStyle>
-                <Style TargetType="FlipViewItem">
-                    <Setter Property="Margin" Value="20"/>
-                </Style>
-            </FlipView.ItemContainerStyle>
-
-            <FlipView.ItemTemplate>
-                <DataTemplate>
-                    <Grid x:Name="itemGrid" Margin="120,0,120,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <RichTextBlock Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False" Grid.Row="0">
-                            <Paragraph>
-                                <Run FontSize="30" Text="{Binding Title}"/>
-                            </Paragraph>
-                        </RichTextBlock>
-                        <RichTextBlock Margin="0, 10, 40, 0" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False" Grid.Row="1">
-                            <Paragraph>
-                                <Run FontWeight="Normal" Text="{Binding RawDescription}" FontFamily="Global User Interface"/>
-                            </Paragraph>
-                        </RichTextBlock>
+        <Grid x:Name="itemGrid" Margin="0, 0, 0, 0" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>            
+            <RichTextBlock Margin="120, 0, 40, 0" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False" Grid.Row="0">
+                <Paragraph>
+                    <Run FontWeight="Normal" FontSize="20" Text="{Binding RawDescription}" FontFamily="Global User Interface"/>
+                </Paragraph>
+            </RichTextBlock>
                         
-                        <WebView x:Name="webView" Margin="0, 20, 0, 0" AutomationProperties.Name="{Binding Title}" Source="{Binding Content}" Grid.Row="2" Width="980"  HorizontalAlignment="Left"/>
+            <WebView
+                ScrollViewer.VerticalScrollMode="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                            
+                x:Name="webView" Margin="90, 20, 0, 0" AutomationProperties.Name="{Binding Title}" Source="{Binding Content}" Grid.Row="1" Width="980"  HorizontalAlignment="Left"/>
                     
-                    </Grid>
-                </DataTemplate>
-            </FlipView.ItemTemplate>
-        </FlipView>
-
+        </Grid>
+        
+        
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -124,4 +104,14 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
+
+    <Page.TopAppBar>
+        <AppBar>
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Export" />
+                </StackPanel>
+            </Grid>
+        </AppBar>
+    </Page.TopAppBar>
 </common:LayoutAwarePage>

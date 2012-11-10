@@ -24,10 +24,15 @@ namespace Knoema.Windows8
     /// flip through other items belonging to the same group.
     /// </summary>
     public sealed partial class ItemDetailPage : Knoema.Windows8.Common.LayoutAwarePage
-    {
+	{
+		private static TypedEventHandler<DataTransferManager, DataRequestedEventArgs> _handler;
         public ItemDetailPage()
         {
-			RegisterForShare();
+			if (_handler != null)
+				DataTransferManager.GetForCurrentView().DataRequested -= _handler;
+
+			_handler = ShareLinkHandler;
+			DataTransferManager.GetForCurrentView().DataRequested += _handler;
 
             this.InitializeComponent();
         }
@@ -44,16 +49,14 @@ namespace Knoema.Windows8
         protected override async void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             // Allow saved page state to override the initial item to display
-            if (pageState != null && pageState.ContainsKey("SelectedItem"))
+			if (pageState != null && pageState.ContainsKey("Item"))
             {
-                navigationParameter = pageState["SelectedItem"];
+				navigationParameter = pageState["Item"];
             }
 
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             var item = await AppModel.GetItem((String)navigationParameter);
-            this.DefaultViewModel["Group"] = item.Group;
-            this.DefaultViewModel["Items"] = item.Group.Items;
-            this.flipView.SelectedItem = item;
+            this.DefaultViewModel["Item"] = item;
         }
 
         /// <summary>
@@ -64,8 +67,7 @@ namespace Knoema.Windows8
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
-            var selectedItem = (ResourceItem)this.flipView.SelectedItem;
-            pageState["SelectedItem"] = selectedItem.UniqueId;
+			pageState["Item"] = this.DefaultViewModel["Item"];
         }
 
 		private T FindFirstElementInVisualTree<T>(DependencyObject parentElement) where T : DependencyObject
@@ -101,19 +103,13 @@ namespace Knoema.Windows8
 				FindFirstElementInVisualTree<WebView>(container).Navigate(new Uri((flipView.SelectedItem as ResourceItem).Content));
 		}
 
-		private void RegisterForShare()
-		{
-			DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-			dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareLinkHandler);
-		}
-
 		private void ShareLinkHandler(DataTransferManager sender, DataRequestedEventArgs e)
 		{
-			var selectedItem = (ResourceItem)this.flipView.SelectedItem;
+			var selectedItem = (ResourceItem)this.DefaultViewModel["Item"];
 
 			DataRequest request = e.Request;
 			request.Data.Properties.Title = selectedItem.Title;
-			request.Data.Properties.Description = selectedItem.Description;
+			request.Data.Properties.Description = selectedItem.Description ?? string.Empty;
 			request.Data.SetUri(new Uri("http://knoema.com/" + selectedItem.UniqueId));
 		}
     }

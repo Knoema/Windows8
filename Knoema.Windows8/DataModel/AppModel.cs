@@ -110,7 +110,7 @@ namespace Knoema.Windows8.Data
 									"Demographics",
 									"Energy",
 									"Economics",
-									"Commodities",
+									"Russia",
 									"Africa",
 									"Agriculture",
 									"Commodity Passport",
@@ -124,7 +124,7 @@ namespace Knoema.Windows8.Data
 
 				var group = new TagItem(topic, topic, string.Empty, "Assets/DarkGray.png", string.Empty, color);
 
-				var tagResp = await client.GetAsync(string.Format("http://dev.knoema.org/api/1.0/frontend/tags?tag={0}&client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", topic));
+				var tagResp = await client.GetAsync(string.Format("http://dev.knoema.org/api/1.0/frontend/tags?tag={0}&count=20&client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", topic));
 
 				var resources = JsonConvert.DeserializeObject<IEnumerable<ResourceItem.Serial>>(await tagResp.Content.ReadAsStringAsync());
 				foreach (var resource in resources.Where(res => res.Type != "Dataset"))
