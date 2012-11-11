@@ -76,14 +76,18 @@ namespace Knoema.Windows8
 
 		private AtlasViewModel ParseAtlasPage(string result)
 		{
-			
 			XDocument doc = XDocument.Parse(result, LoadOptions.None);
+			var titleNode = doc.Descendants("h3").FirstOrDefault();
+			var relatedPages = doc.Descendants("a").Where(a => a.Attribute("class").Value == "page")
+				.Select(a => new ResourceItem(a.Attribute("data-id").Value, a.Attribute("title").Value, "", string.Format("http://th.knoema.com/production/{0}.png", a.Attribute("data-id").Value), "", null, "")).ToList();
 
 			var model = new AtlasViewModel
 			{
 				ImageSource = doc.Descendants("img").Where(node => node.Attribute("class").Value == "flag").Select(img => img.Attribute("src").Value).FirstOrDefault(),
-				Title = doc.Descendants("h3").FirstOrDefault().Value
+				Title = titleNode.Value,
+				Parameters = (titleNode.NextNode as XElement).Element("ul").Elements("li").Select(el => el.Value.ToString()).ToList()
 			};
+
 			return model;
 		}
 	}

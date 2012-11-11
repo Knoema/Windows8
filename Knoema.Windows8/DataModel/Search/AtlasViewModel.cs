@@ -10,7 +10,7 @@ namespace Knoema.Windows8.DataModel.Search
 	{
 		public string Title { get; set; }
 		public string ImageSource { get; set; }
-		public List<string> Paraeters { get; set; }
+		public List<string> Parameters { get; set; }
 
 
 	}
