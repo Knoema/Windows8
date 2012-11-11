@@ -55,7 +55,7 @@ namespace Knoema.Windows8
             }
 
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var item = await AppModel.GetItem((String)navigationParameter);
+			var item = await AppModel.GetResource((String)navigationParameter);
             this.DefaultViewModel["Item"] = item;
         }
 

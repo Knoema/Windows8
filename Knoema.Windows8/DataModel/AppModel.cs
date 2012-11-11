@@ -141,5 +141,14 @@ namespace Knoema.Windows8.Data
 			var response = await client.GetAsync(string.Format("http://knoema.com/api/1.0/search?query={0}&client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", query));
 			return JsonConvert.DeserializeObject<SearchResults>(await response.Content.ReadAsStringAsync());
 		}
+
+		public static async Task<ResourceItem> GetResource(string uniqueId)
+		{
+			var client = new System.Net.Http.HttpClient();
+			var response = await client.GetAsync(string.Format("http://knoema.com/api/1.0/resource/{0}?client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", uniqueId));
+			var res = JsonConvert.DeserializeObject<ResourceItem.Serial>(await response.Content.ReadAsStringAsync());
+
+			return new ResourceItem(res, null, null);
+		}
 	}
 }
