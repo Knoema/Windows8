@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="DataModel\ItemBase.cs" />
     <Compile Include="DataModel\ResourceItem.cs" />
+    <Compile Include="DataModel\Search\SearchResults.cs" />
     <Compile Include="DataModel\TagItem.cs" />
     <Compile Include="HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>

@@ -14,6 +14,7 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using Knoema.Windows8.Data.Search;
 
 // The data model defined by this file serves as a representative example of a strongly-typed
 // model that supports notification when members are added, removed, or modified.  The property
@@ -107,16 +108,16 @@ namespace Knoema.Windows8.Data
 		{
 			var client = new System.Net.Http.HttpClient();
 			var tags = new string[]{
+									"Russia",
 									"Demographics",
 									"Energy",
 									"Economics",
-									"Russia",
 									"Africa",
 									"Agriculture",
 									"Commodity Passport",
 									"World Data Maps"};
 
-			var colors = new string[] { "#146714", "#671414", "#674b14", "#14674b", "#144b67", "#141467", "#4b1467", "#66144b" };
+			var colors = new string[] { "#14674b", "#146714", "#671414", "#674b14", "#144b67", "#141467", "#4b1467", "#66144b" };
 		
 			foreach (var topic in tags)
 			{
@@ -124,7 +125,7 @@ namespace Knoema.Windows8.Data
 
 				var group = new TagItem(topic, topic, string.Empty, "Assets/DarkGray.png", string.Empty, color);
 
-				var tagResp = await client.GetAsync(string.Format("http://dev.knoema.org/api/1.0/frontend/tags?tag={0}&count=20&client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", topic));
+				var tagResp = await client.GetAsync(string.Format("http://knoema.com/api/1.0/frontend/tags?tag={0}&count=20&client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", topic));
 
 				var resources = JsonConvert.DeserializeObject<IEnumerable<ResourceItem.Serial>>(await tagResp.Content.ReadAsStringAsync());
 				foreach (var resource in resources.Where(res => res.Type != "Dataset"))
@@ -133,5 +134,12 @@ namespace Knoema.Windows8.Data
 				this.HomeTags.Add(group);
 			}
 		}
-    }
+
+		public static async Task<SearchResults> Search(string query)
+		{
+			var client = new System.Net.Http.HttpClient();
+			var response = await client.GetAsync(string.Format("http://knoema.com/api/1.0/search?query={0}", query));
+			return JsonConvert.DeserializeObject<SearchResults>(await response.Content.ReadAsStringAsync());
+		}
+	}
 }
