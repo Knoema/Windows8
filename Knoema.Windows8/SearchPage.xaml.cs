@@ -96,5 +96,13 @@ namespace Knoema.Windows8
 			};
 			return model;
 		}
+
+		void ItemView_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			// Navigate to the appropriate destination page, configuring the new page
+			// by passing required information as a navigation parameter
+			var itemId = ((ResourceItem)e.ClickedItem).UniqueId;
+			this.Frame.Navigate(typeof(ItemDetailPage), itemId);
+		}
 	}
 }
