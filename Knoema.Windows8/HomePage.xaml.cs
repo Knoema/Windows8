@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Search;
+using Knoema.Windows8.Data.Search;
 
 // The Grouped Items Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234231
 
@@ -116,7 +117,10 @@ namespace Knoema.Windows8
 				this.Frame.Navigate(typeof(ItemDetailPage), res.UniqueId);
 
 			else
-				this.Frame.Navigate(typeof(SearchPage), args.QueryText);			
+			{
+				this.Frame.Navigate(typeof(SearchPage), args.QueryText);
+			}
+
 		}
     }
 }

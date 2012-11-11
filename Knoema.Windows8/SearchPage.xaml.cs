@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 using Knoema.Windows8.Data;
+using Knoema.Windows8.Data.Search;
+using Knoema.Windows8.DataModel.Search;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -38,14 +42,24 @@ namespace Knoema.Windows8
 		/// session.  This will be null the first time a page is visited.</param>
 		protected override async void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
 		{
-			var query = (string)navigationParameter;
-			
+			var query = (string)navigationParameter;			
 			pageTitle.Text = string.Format("Search result for {0}", query);
-			
+
 			var searchResults = await AppModel.Search(query);
+
+			var atlasResult = searchResults.Items.Where(x => x.Type == ResultType.Atlas && x.Indicator == null).ToList();
+			if (atlasResult.Any())
+			{
+				var client = new System.Net.Http.HttpClient();
+				var response = await client.GetAsync(atlasResult.First().EmbedUrl);
+				ParseAtlasPage(await response.Content.ReadAsStringAsync());
+			}
+
+			this.DefaultViewModel["Atlas"] = atlasResult;
+			this.DefaultViewModel["Tags"] = searchResults.Items.Where(x => x.Type == ResultType.Tag);
 			this.DefaultViewModel["Resources"] = searchResults.Items
-				.Where(x => x.Type == Data.Search.ResultType.Resource)
-				.Select(x=> new ResourceItem(x.Resource, null, null));
+					.Where(x => x.Type == Data.Search.ResultType.Resource)
+					.Select(x => new ResourceItem(x.Resource, null, null));
 
 			this.progressRing.IsActive = false;	
 		}
@@ -58,6 +72,19 @@ namespace Knoema.Windows8
 		/// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
 		protected override void SaveState(Dictionary<String, Object> pageState)
 		{
+		}
+
+		private AtlasViewModel ParseAtlasPage(string result)
+		{
+			
+			XDocument doc = XDocument.Parse(result, LoadOptions.None);
+
+			var model = new AtlasViewModel
+			{
+				ImageSource = doc.Descendants("img").Where(node => node.Attribute("class").Value == "flag").Select(img => img.Attribute("src").Value).FirstOrDefault(),
+				Title = doc.Descendants("h3").FirstOrDefault().Value
+			};
+			return model;
 		}
 	}
 }
