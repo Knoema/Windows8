@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Knoema.Windows8.Data;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -35,8 +36,16 @@ namespace Knoema.Windows8
 		/// </param>
 		/// <param name="pageState">A dictionary of state preserved by this page during an earlier
 		/// session.  This will be null the first time a page is visited.</param>
-		protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+		protected override async void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
 		{
+			var query = (string)navigationParameter;
+			
+			pageTitle.Text = string.Format("Search result for {0}", query);
+			
+			var searchResults = await AppModel.Search(query);
+			this.DefaultViewModel["Resources"] = searchResults.Items.Where(x => x.Type == Data.Search.ResultType.Resource);
+
+			this.progressRing.IsActive = false;	
 		}
 
 		/// <summary>
