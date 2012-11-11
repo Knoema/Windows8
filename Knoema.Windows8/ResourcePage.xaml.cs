@@ -67,7 +67,8 @@ namespace Knoema.Windows8
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
-			pageState["Item"] = this.DefaultViewModel["Item"];
+			if (this.DefaultViewModel.ContainsKey("item"))
+				pageState["Item"] = this.DefaultViewModel["Item"];
         }
 
 		private T FindFirstElementInVisualTree<T>(DependencyObject parentElement) where T : DependencyObject

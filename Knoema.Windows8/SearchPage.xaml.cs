@@ -71,6 +71,12 @@ namespace Knoema.Windows8
 
 			this.DefaultViewModel["Resources"] = new List<TagItem>() { tag };
 
+			if (tag.Items.Count == 0)
+			{
+				itemGridView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				pageTitle.Text = pageTitle.Text + ": no results";
+			}	
+
 			this.progressRing.IsActive = false;	
 		}
 

@@ -78,7 +78,7 @@
                 </GroupStyle>
             </GridView.GroupStyle>
         </GridView>
-
+        
         <!-- Vertical scrolling list only used when snapped -->
         <ListView
             x:Name="itemListView"
@@ -123,8 +123,9 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}" />
             <TextBlock x:Name="pageTitle" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,16,0,0" Grid.Column="1" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
+        
         <ProgressRing x:Name="progressRing" HorizontalAlignment="Left" Margin="126,5,0,0" Grid.Row="1" VerticalAlignment="Top" IsActive="True" FontFamily="Global User Interface"/>
-
+                
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -170,4 +171,5 @@
         </VisualStateManager.VisualStateGroups>
     </Grid>
     
+
 </common:LayoutAwarePage>
