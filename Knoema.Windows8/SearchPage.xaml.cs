@@ -43,7 +43,7 @@ namespace Knoema.Windows8
 		protected override async void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
 		{
 			var query = (string)navigationParameter;			
-			pageTitle.Text = string.Format("Search result for {0}", query);
+			pageTitle.Text = string.Format("Search result for \"{0}\"", query);
 
 			var searchResults = await AppModel.Search(query);
 
@@ -55,11 +55,21 @@ namespace Knoema.Windows8
 				ParseAtlasPage(await response.Content.ReadAsStringAsync());
 			}
 
-			this.DefaultViewModel["Atlas"] = atlasResult;
-			this.DefaultViewModel["Tags"] = searchResults.Items.Where(x => x.Type == ResultType.Tag);
-			this.DefaultViewModel["Resources"] = searchResults.Items
+			//this.DefaultViewModel["Atlas"] = atlasResult;
+			//this.DefaultViewModel["Tags"] = searchResults.Items.Where(x => x.Type == ResultType.Tag).ToList();
+
+			var tag = new TagItem(string.Empty, "Dashboards", string.Empty, string.Empty, string.Empty, string.Empty);
+
+			var resources = searchResults.Items
 					.Where(x => x.Type == Data.Search.ResultType.Resource)
-					.Select(x => new ResourceItem(x.Resource, null, null));
+					.Select(x => x.Resource).Where(x => x.Type == "Page")
+					.Select(x => new ResourceItem(x, null, "#059bda"))
+					.ToList();
+
+			foreach (var item in resources)
+				tag.Items.Add(item);
+
+			this.DefaultViewModel["Resources"] = new List<TagItem>() { tag };
 
 			this.progressRing.IsActive = false;	
 		}
