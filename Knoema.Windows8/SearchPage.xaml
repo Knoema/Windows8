@@ -13,7 +13,7 @@
     <Page.Resources>
 
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
-        <x:String x:Key="AppName">My Application</x:String>
+        <x:String x:Key="AppName">Knoema</x:String>
     </Page.Resources>
 
     <!--
@@ -36,6 +36,8 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
+        
+        <ProgressRing x:Name="progressRing" HorizontalAlignment="Left" Margin="126,5,0,0" Grid.Row="1" VerticalAlignment="Top" IsActive="True" FontFamily="Global User Interface"/>
 
         <VisualStateManager.VisualStateGroups>
 

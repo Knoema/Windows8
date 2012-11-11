@@ -110,7 +110,7 @@ namespace Knoema.Windows8
 				}
 			}
 
-			if (tag != null)			
+			if (tag != null)
 				this.Frame.Navigate(typeof(TagPage), tag.UniqueId);
 
 			else if (res != null)
@@ -118,11 +118,9 @@ namespace Knoema.Windows8
 
 			else
 			{
-				var supportedResults = new ResultType[] { ResultType.Resource, ResultType.Atlas, ResultType.Tag };
-				var searchResults = await AppModel.Search(args.QueryText);
-				var resources = searchResults.Items.Where(x => supportedResults.Contains(x.Type));
-								
+				this.Frame.Navigate(typeof(SearchPage), args.QueryText);
 			}
+
 		}
     }
 }
