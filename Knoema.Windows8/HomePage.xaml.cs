@@ -110,10 +110,17 @@ namespace Knoema.Windows8
 			}
 
 			if (tag != null)			
-				this.Frame.Navigate(typeof(TagPage), tag.UniqueId);			
+				this.Frame.Navigate(typeof(TagPage), tag.UniqueId);
 
 			else if (res != null)
-				this.Frame.Navigate(typeof(ItemDetailPage), res.UniqueId);			
+				this.Frame.Navigate(typeof(ItemDetailPage), res.UniqueId);
+
+			else
+			{
+				var searchResults = await AppModel.Search(args.QueryText);
+				var resources = searchResults.Items.Where(x => x.Type == Data.Search.ResultType.Resource);
+								
+			}
 		}
     }
 }
