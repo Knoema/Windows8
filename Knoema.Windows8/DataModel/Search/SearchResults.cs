@@ -23,6 +23,9 @@ namespace Knoema.Windows8.Data.Search
 		public ResultType Type { get; set; }
 		public ResourceItem.Serial Resource { get; set; }
 		public string Tag { get; set; }
+		public string Region { get; set; }
+		public string Title { get; set; }
+		public object Indicator { get; set; }
 	}
 
 	public class SearchResults

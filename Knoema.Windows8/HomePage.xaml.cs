@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Search;
+using Knoema.Windows8.Data.Search;
 
 // The Grouped Items Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234231
 
@@ -117,8 +118,9 @@ namespace Knoema.Windows8
 
 			else
 			{
+				var supportedResults = new ResultType[] { ResultType.Resource, ResultType.Atlas, ResultType.Tag };
 				var searchResults = await AppModel.Search(args.QueryText);
-				var resources = searchResults.Items.Where(x => x.Type == Data.Search.ResultType.Resource);
+				var resources = searchResults.Items.Where(x => supportedResults.Contains(x.Type));
 								
 			}
 		}
