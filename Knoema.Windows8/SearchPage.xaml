@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Knoema.Windows8"
     xmlns:common="using:Knoema.Windows8.Common"
+    xmlns:data="using:Knoema.Windows8.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -14,6 +15,26 @@
 
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
         <x:String x:Key="AppName">Knoema</x:String>
+
+         <DataTemplate x:Key="ItemTemplate">
+            <Grid HorizontalAlignment="Left" Width="362" Height="222">
+                <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" BorderBrush="{StaticResource ListBoxItemPointerOverBackgroundThemeBrush}" BorderThickness="1">
+                    <Image Source="{Binding Image}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+                </Border>
+                <StackPanel VerticalAlignment="Bottom" Background="{Binding Color}">
+                    <TextBlock Text="{Binding Title}" Foreground="White" Style="{StaticResource TitleTextStyle}" Height="40" Padding="15,0,15,0"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+ 
+
+        <CollectionViewSource
+            x:Name="searchSources"
+            Source="{Binding Resources}"
+            IsSourceGrouped="true"
+            ItemsPath="TopItems"
+            d:Source="{Binding Resources, Source={d:DesignInstance Type=data:AppModel, IsDesignTimeCreatable=True}}"/>
+        
     </Page.Resources>
 
     <!--
@@ -22,13 +43,15 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Style="{StaticResource LayoutRootStyle}">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
-        <Grid>
+        <Grid Grid.Row="0"> 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -36,9 +59,43 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
-        
-        <ProgressRing x:Name="progressRing" HorizontalAlignment="Left" Margin="126,5,0,0" Grid.Row="1" VerticalAlignment="Top" IsActive="True" FontFamily="Global User Interface"/>
 
+        <ProgressRing Grid.Row="1" x:Name="progressRing" HorizontalAlignment="Left" Margin="126,5,0,0" VerticalAlignment="Top" IsActive="True" FontFamily="Global User Interface"/>
+
+        <Grid Grid.Row="2">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid  
+                
+                Style="{StaticResource LayoutRootStyle}"
+                DataContext="{Binding Resources}"
+                Grid.Column="0"
+                Grid.Row="1">
+                
+                <GridView                  
+                    x:Name="itemGridView"
+                    AutomationProperties.AutomationId="ItemGridView"
+                    AutomationProperties.Name="Grouped Items"
+                    ItemsSource="{Binding Source={StaticResource searchSources}}"
+                    ItemTemplate="{StaticResource ItemTemplate}"
+                    SelectionMode="None"
+                    IsSwipeEnabled="false"
+                    IsItemClickEnabled="True"
+                    HorizontalAlignment="Right">              
+                </GridView>
+                
+            </Grid>
+        </Grid>
+        
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -69,4 +126,5 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
+
 </common:LayoutAwarePage>

@@ -138,7 +138,7 @@ namespace Knoema.Windows8.Data
 		public static async Task<SearchResults> Search(string query)
 		{	
 			var client = new System.Net.Http.HttpClient();
-			var response = await client.GetAsync(string.Format("http://knoema.com/api/1.0/search?query={0}", query));
+			var response = await client.GetAsync(string.Format("http://knoema.com/api/1.0/search?query={0}&client_id=EZj54KGFo3rzIvnLczrElvAitEyU28DGw9R73tif", query));
 			return JsonConvert.DeserializeObject<SearchResults>(await response.Content.ReadAsStringAsync());
 		}
 	}

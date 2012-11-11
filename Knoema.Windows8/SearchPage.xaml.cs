@@ -43,7 +43,9 @@ namespace Knoema.Windows8
 			pageTitle.Text = string.Format("Search result for {0}", query);
 			
 			var searchResults = await AppModel.Search(query);
-			this.DefaultViewModel["Resources"] = searchResults.Items.Where(x => x.Type == Data.Search.ResultType.Resource);
+			this.DefaultViewModel["Resources"] = searchResults.Items
+				.Where(x => x.Type == Data.Search.ResultType.Resource)
+				.Select(x=> new ResourceItem(x.Resource, null, null));
 
 			this.progressRing.IsActive = false;	
 		}
