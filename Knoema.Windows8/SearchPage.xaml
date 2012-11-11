@@ -47,7 +47,7 @@
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"
-            HorizontalAlignment="Right"
+            HorizontalAlignment="Left"
             ItemClick="ItemView_ItemClick" >
 
             <GridView.ItemsPanel>

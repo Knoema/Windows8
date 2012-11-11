@@ -47,17 +47,6 @@ namespace Knoema.Windows8
 
 			var searchResults = await AppModel.Search(query);
 
-			var atlasResult = searchResults.Items.Where(x => x.Type == ResultType.Atlas && x.Indicator == null).ToList();
-			if (atlasResult.Any())
-			{
-				var client = new System.Net.Http.HttpClient();
-				var response = await client.GetAsync(atlasResult.First().EmbedUrl);
-				ParseAtlasPage(await response.Content.ReadAsStringAsync());
-			}
-
-			//this.DefaultViewModel["Atlas"] = atlasResult;
-			//this.DefaultViewModel["Tags"] = searchResults.Items.Where(x => x.Type == ResultType.Tag).ToList();
-
 			var tag = new TagItem(string.Empty, "Dashboards", string.Empty, string.Empty, string.Empty, string.Empty);
 
 			var resources = searchResults.Items
@@ -68,14 +57,22 @@ namespace Knoema.Windows8
 
 			foreach (var item in resources)
 				tag.Items.Add(item);
+			
+			var atlasResult = searchResults.Items.Where(x => x.Type == ResultType.Atlas && x.Indicator == null).ToList();			
+			if (atlasResult.Any())
+			{
+				var client = new System.Net.Http.HttpClient();
+				var response = await client.GetAsync(atlasResult.First().EmbedUrl);
+				var atlasPage = ParseAtlasPage(await response.Content.ReadAsStringAsync());
 
-			this.DefaultViewModel["Resources"] = new List<TagItem>() { tag };
+				foreach(var item in atlasPage.RelatedPages)
+					tag.Items.Add(item);
+			}
 
 			if (tag.Items.Count == 0)
-			{
 				itemGridView.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-				pageTitle.Text = pageTitle.Text + ": no results";
-			}	
+			else
+				this.DefaultViewModel["Resources"] = new List<TagItem>() { tag };
 
 			this.progressRing.IsActive = false;	
 		}
@@ -94,8 +91,8 @@ namespace Knoema.Windows8
 		{
 			XDocument doc = XDocument.Parse(result, LoadOptions.None);
 			var titleNode = doc.Descendants("h3").FirstOrDefault();
-			var relatedPages = doc.Descendants("a").Where(a => a.Attribute("class").Value == "page")
-				.Select(a => new ResourceItem(a.Attribute("data-id").Value, a.Attribute("title").Value, "", string.Format("http://th.knoema.com/production/{0}.png", a.Attribute("data-id").Value), "", null, "")).ToList();
+			var relatedPages = doc.Descendants("a").Where(a => a.HasAttributes && a.Attribute("class")!= null && a.Attribute("class").Value == "page")
+				.Select(a => new ResourceItem(a.Attribute("data-id").Value, a.Attribute("title").Value, "", string.Format("http://th.knoema.com/production/{0}-x2.png", a.Attribute("data-id").Value), "", null, "#059bda")).ToList();
 
 			var tag = new TagItem(string.Empty, "Related pages", string.Empty, string.Empty, string.Empty, string.Empty);
 
@@ -107,7 +104,7 @@ namespace Knoema.Windows8
 				ImageSource = doc.Descendants("img").Where(node => node.Attribute("class").Value == "flag").Select(img => img.Attribute("src").Value).FirstOrDefault(),
 				Title = titleNode.Value,
 				Parameters = (titleNode.NextNode as XElement).Element("ul").Elements("li").Select(el => el.Value.ToString()).ToList(),
-				RelatedPages = new List<TagItem>() { tag }
+				RelatedPages = tag.Items 
 			};
 
 			return model;
